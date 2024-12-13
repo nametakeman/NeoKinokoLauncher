@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ローカル上のファイルパスを取得する。
+/// ローカル上のファイルパスを管理する。
 /// </summary>
 public class LocalDirPaths
 {
