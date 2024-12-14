@@ -5614,6 +5614,9 @@
             specified.
             </summary>
         </member>
+        <member name="P:Google.Apis.Sheets.v4.Data.SetDataValidationRequest.FilteredRowsIncluded">
+            <summary>Optional. If true, the data validation rule will be applied to the filtered rows as well.</summary>
+        </member>
         <member name="P:Google.Apis.Sheets.v4.Data.SetDataValidationRequest.Range">
             <summary>The range the data validation rule should apply to.</summary>
         </member>

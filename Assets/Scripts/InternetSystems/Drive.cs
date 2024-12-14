@@ -8,13 +8,27 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class Drive : MonoBehaviour
+public class Drive
 {
+    //ドライブサービスを格納でき、パブリックから取得できるように作成。なければ作る
+    public DriveService _driveService {
+        get 
+        {
+            if (_driveService == null)
+            {
+                _driveService = _createAPI();
+            }
+            return _driveService;
+        }
+        private set { _driveService = value; }
+    }
+
+
+
     /// <summary>
     /// インターネット接続用のAPIを作成。詳細はApisのリファレンス
     /// </summary>
-    //ここはオフラインでもいける..のか。。？
-    public async UniTask<DriveService> _createAPI()
+    public DriveService _createAPI()
     {
         //ここらへんはマジで説明ムズイから公式のリファレンス読んでくれーーー
 
@@ -36,6 +50,35 @@ public class Drive : MonoBehaviour
     }
 
 
+
+    public async UniTask <string[]> DriveList(DriveService _ds)
+    {
+        List<string> _driveList = new List<string>();
+
+        //フォルダ内の検索
+        var _request = _ds.Files.List();
+        _request.Q = "'" + new InternetDatas().JSON_FOLDER_ID + "' in parents";
+        //ここで取得するフィールドをしていできる。idとかnameとか
+        _request.Fields = "nextPageToken, files(id,name)";
+        var files = new List<Google.Apis.Drive.v3.Data.File>();
+
+        do
+        {
+            var result = _request.Execute();
+            files.AddRange(result.Files);
+            _request.PageToken = result.NextPageToken;
+        } while (!string.IsNullOrEmpty(_request.PageToken));
+
+        
+
+        //結果を出力する
+        foreach (var file in files)
+        {
+            _driveList.Add(file.Id);
+        }
+
+        return _driveList.ToArray();
+    }
 
     /// <summary>
     /// 指定されたIDのファイルをダウンロードする

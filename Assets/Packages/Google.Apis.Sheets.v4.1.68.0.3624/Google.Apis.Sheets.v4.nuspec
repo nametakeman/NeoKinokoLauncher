@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
-    <id>Google.Apis.Drive.v3</id>
-    <version>1.68.0.3574</version>
-    <title>Google.Apis.Drive.v3 Client Library</title>
+    <id>Google.Apis.Sheets.v4</id>
+    <version>1.68.0.3624</version>
+    <title>Google.Apis.Sheets.v4 Client Library</title>
     <authors>Google LLC</authors>
     <license type="expression">Apache-2.0</license>
     <licenseUrl>https://licenses.nuget.org/Apache-2.0</licenseUrl>
     <icon>NuGetIcon.png</icon>
     <projectUrl>https://github.com/google/google-api-dotnet-client</projectUrl>
     <iconUrl>https://www.gstatic.com/images/branding/product/1x/google_developers_64dp.png</iconUrl>
-    <description>Google APIs Client Library for working with Drive v3.
+    <description>Google APIs Client Library for working with Sheets v4.
 
       Product documentation is available at:
-      https://developers.google.com/drive/
+      https://developers.google.com/sheets/
 
       API reference documentation for this package is available at:
-      https://googleapis.dev/dotnet/Google.Apis.Drive.v3/latest/api/Google.Apis.Drive.v3.html
+      https://googleapis.dev/dotnet/Google.Apis.Sheets.v4/latest/api/Google.Apis.Sheets.v4.html
 
       The source code for this package is available at:
-      https://github.com/google/google-api-dotnet-client/tree/master/Src/Generated/Google.Apis.Drive.v3
+      https://github.com/google/google-api-dotnet-client/tree/master/Src/Generated/Google.Apis.Sheets.v4
 
       Supported Platforms:
       - .NET Framework 4.6.2+
@@ -36,7 +36,7 @@
       - Windows Phone Silverlight 8.0</description>
     <copyright>Copyright 2024 Google LLC</copyright>
     <tags>Google</tags>
-    <repository type="git" url="https://github.com/google/google-api-dotnet-client" commit="a03289be736ec337dc4bee741d8b7f712b3085f1" />
+    <repository type="git" url="https://github.com/google/google-api-dotnet-client" commit="519ceb61d13209d3545c1065596b39699284bd00" />
     <dependencies>
       <group targetFramework=".NETFramework4.6.2">
         <dependency id="Google.Apis" version="1.68.0" exclude="Build,Analyzers" />

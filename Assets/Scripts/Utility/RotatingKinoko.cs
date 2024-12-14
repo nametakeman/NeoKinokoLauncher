@@ -10,6 +10,7 @@ public class RotatingKinoko : MonoBehaviour
         this.transform.Rotate(new Vector3(0, 0, -5) * Time.deltaTime);
         if(this.transform.rotation.z <= -360)
         {
+
         }
     }
 }

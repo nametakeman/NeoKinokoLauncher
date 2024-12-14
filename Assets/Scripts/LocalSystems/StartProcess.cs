@@ -1,4 +1,6 @@
 using Cysharp.Threading.Tasks;
+using Google.Apis.Drive.v3;
+using Google.Apis.Services;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +13,10 @@ public class StartProcess : MonoBehaviour
     void Start()
     {
         StartProMethod().Forget();
+        StartOnlineMethod();
     }
+
+
 
     /// <summary>
     /// パブリックなメソッドでオンラインモード移行の発火のみを行う。(eventtriggerからの参照など)
@@ -36,6 +41,9 @@ public class StartProcess : MonoBehaviour
         //jsonファイルが追加されていないゲームも含めすべての確認しうるゲームのGameDatasを配列として取得する
         GameData[] _allGameDatas = await directorySystems._createAllGameDatas(_gameDatas, _localGameDirName);
 
+        //ゲームがダウンロードされているかを確認する
+        await directorySystems._checkStatus(_allGameDatas);
+
         //mainDataオブジェクトにゲームのデータを渡す
         await mainUICtrl.GetComponent<mainUICtrl>()._setDatas(_allGameDatas);
 
@@ -48,6 +56,12 @@ public class StartProcess : MonoBehaviour
     /// </summary>
     async UniTask OnlineStartProcess()
     {
+        //Drive上にあるjsonファイルのメタデータを取得する。（ここでネットに繋がっているかを判断)
+        Drive _drive = new Drive();
+        DriveService _driveService = _drive._createAPI();
+
+
+        string[] _strA = await _drive.DriveList(_driveService);
 
     }
 }

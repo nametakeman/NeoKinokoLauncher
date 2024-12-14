@@ -5,6 +5,8 @@ using System.IO;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Text;
+using TMPro;
+using UnityEditor.Experimental.GraphView;
 
 public class DirectorySystems
 {
@@ -107,5 +109,35 @@ public class DirectorySystems
         }
 
         return _returnData.ToArray();
+    }
+
+    /// <summary>
+    /// 渡されたGameData配列からゲームが実際にフォルダにあるかを確認して代入する
+    /// </summary>
+    public async UniTask _checkStatus(GameData[] _datas)
+    {
+
+        foreach (GameData g in _datas)
+        {
+            //未インストールの際
+            if (!Directory.Exists(new LocalDirPaths()._gameFilePath + "\\" + g.FileName))
+            {
+                Debug.Log("NonInstall");
+                g.Status = "NotInstall";
+                continue;
+            }
+            else if (!File.Exists(new LocalDirPaths()._jsonFolderPath + "\\" + g.FileName + ".json"))
+            {
+                Debug.Log("Local");
+                g.Status = "Local";
+                continue;
+            }
+            else
+            {
+                Debug.Log("Online");
+                g.Status = "Online";
+                continue;
+            }
+        }
     }
 }

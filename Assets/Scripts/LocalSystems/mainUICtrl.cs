@@ -15,6 +15,7 @@ public class mainUICtrl : MonoBehaviour
     [SerializeField] Text _editorTxt;
     [SerializeField] Text _devText;
     [SerializeField] Text _setumeiTxt;
+    [SerializeField] Text _Version;
 
     int _nowIndex = 0;
     
@@ -43,6 +44,8 @@ public class mainUICtrl : MonoBehaviour
         _editorTxt.text = _AllGameDatas[_nowIndex].SoftwareType;
         _devText.text = _AllGameDatas[_nowIndex].DevName;
         _setumeiTxt.text = _AllGameDatas[_nowIndex].Description;
+        _Version.text = _AllGameDatas[_nowIndex].Status;
+        
     }
 
     public void PlusIndex()

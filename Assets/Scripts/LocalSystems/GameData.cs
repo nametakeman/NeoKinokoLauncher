@@ -16,4 +16,5 @@ public class GameData
     public string SoftwareType;
     public string Description;
     public string Version;
+    public string Status;
 }
