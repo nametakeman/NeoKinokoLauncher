@@ -76,7 +76,7 @@ public class Drive
         {
             _driveList.Add(file.Id);
         }
-
+        Debug.Log("shyutokusuu" + _driveList.Count);
         return _driveList.ToArray();
     }
 

@@ -60,8 +60,14 @@ public class StartProcess : MonoBehaviour
         Drive _drive = new Drive();
         DriveService _driveService = _drive._createAPI();
 
-
-        string[] _strA = await _drive.DriveList(_driveService);
+        try{
+            string[] _strA = await _drive.DriveList(_driveService);
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log("インターネットに接続されていません");
+        }
+        Debug.Log("確認");
 
     }
 }
