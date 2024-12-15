@@ -31,6 +31,11 @@ public class CommandFieldProcess : MonoBehaviour
         {
             _modeChange.GetComponent<ModeChanger>().SwitchMode("main");
         }
+        else if (_cmds[0] == "test")
+        {
+            openSelectedFile openSelectedFile = new openSelectedFile();
+            openSelectedFile.openFileDialogAny();
+        }
 
 
     }

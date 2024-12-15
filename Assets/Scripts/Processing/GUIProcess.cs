@@ -10,6 +10,7 @@ public class GUIProcess : MonoBehaviour
 
     [SerializeField] GameObject _mainUICtrl;
     [SerializeField] GameObject _startProcess;
+    [SerializeField] GameObject _ModeChanges;
 
     public void SetGameData(GameData[] g)
     {
@@ -35,7 +36,6 @@ public class GUIProcess : MonoBehaviour
 
     public void ClickedDlGame()
     {
-        Debug.Log("kousio");
         DlGameProcessing().Forget();
     }
 
@@ -46,6 +46,8 @@ public class GUIProcess : MonoBehaviour
 
     async UniTask DlGameProcessing()
     {
+        _ModeChanges.GetComponent<ModeChanger>().SwitchMode("loading");
+
         Drive _drive = new Drive();
         try
         {
@@ -54,12 +56,18 @@ public class GUIProcess : MonoBehaviour
         catch(System.Exception e)
         {
             Debug.Log("APIの作成に失敗しました\rエラー内容：" + e);
+            _ModeChanges.GetComponent<ModeChanger>().SwitchMode("main");
             return;
         }
 
-        if (!await _drive.DlGame(_AllGameDatas[_mainUICtrl.GetComponent<mainUICtrl>()._nowIndex])) return;
+        if (!await _drive.DlGame(_AllGameDatas[_mainUICtrl.GetComponent<mainUICtrl>()._nowIndex]))
+        {
+            _ModeChanges.GetComponent<ModeChanger>().SwitchMode("main");
+            return;
+        }
 
-        //UIを再ロード
-        await _startProcess.GetComponent<StartProcess>().StartProMethod();
+            //UIを再ロード
+            await _startProcess.GetComponent<StartProcess>().StartProMethod();
+        _ModeChanges.GetComponent<ModeChanger>().SwitchMode("main");
     }
 }

@@ -10,15 +10,13 @@ public class Logger : MonoBehaviour
 {
     [SerializeField] Text _loadingLogTxt;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        Application.logMessageReceived += OnReceiveLog;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnReceiveLog(string logText, string stackTrace, LogType logType)
     {
-        
+        _loadingLogTxt.text = logText;
     }
 }
