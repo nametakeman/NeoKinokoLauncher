@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class mainUICtrl : MonoBehaviour
 {
-    public GameData[] _AllGameDatas { set; get; } = null;
+    public GameData[] _AllGameDatas { private set; get; } = null;
 
     [SerializeField] Text _debugDatailDatasTxt;
 
@@ -15,9 +15,10 @@ public class mainUICtrl : MonoBehaviour
     [SerializeField] Text _editorTxt;
     [SerializeField] Text _devText;
     [SerializeField] Text _setumeiTxt;
-    [SerializeField] Text _Version;
+    [SerializeField] GameObject _StartTxt;
+    [SerializeField] GameObject _DlTxt;
 
-    int _nowIndex = 0;
+    public int _nowIndex { get; private set; } = 0;
     
     public async UniTask _setDatas(GameData[] g)
     {
@@ -44,8 +45,17 @@ public class mainUICtrl : MonoBehaviour
         _editorTxt.text = _AllGameDatas[_nowIndex].SoftwareType;
         _devText.text = _AllGameDatas[_nowIndex].DevName;
         _setumeiTxt.text = _AllGameDatas[_nowIndex].Description;
-        _Version.text = _AllGameDatas[_nowIndex].Status;
-        
+
+        if (_AllGameDatas[_nowIndex].Status == "NotInstall")
+        {
+            _StartTxt.SetActive(false);
+            _DlTxt.SetActive(true);
+        }
+        else if (_AllGameDatas[_nowIndex].Status == "Local" || _AllGameDatas[_nowIndex].Status == "Online")
+        {
+            _StartTxt.SetActive(true);
+            _DlTxt.SetActive(false);
+        }
     }
 
     public void PlusIndex()
@@ -67,4 +77,6 @@ public class mainUICtrl : MonoBehaviour
         }
         LoadData();
     }
+
+    
 }

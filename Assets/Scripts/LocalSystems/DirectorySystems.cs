@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Diagnostics;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Text;
-using TMPro;
-using UnityEditor.Experimental.GraphView;
 
 public class DirectorySystems
 {
@@ -47,7 +46,6 @@ public class DirectorySystems
         return _gameDataList.ToArray();
     }
 
-
     //jsonファイルの読み取りをするメソッド
     private string _readJSON(string _path)
     {
@@ -64,7 +62,7 @@ public class DirectorySystems
         }
         catch (Exception e) 
         {
-            Debug.Log(e);
+            UnityEngine.Debug.Log(e);
         }
         return _jsonData;
     }
@@ -112,6 +110,22 @@ public class DirectorySystems
     }
 
     /// <summary>
+    /// ゲームをスタートする
+    /// </summary>
+    /// <param name="_data">スタートされるゲームのデータ</param>
+    public void _startGame(GameData _data)
+    {
+        if(!File.Exists(new LocalDirPaths()._gameFilePath + "\\" + _data.FileName +"\\"+ _data.ExeName))
+        {
+            throw new Exception("実行するファイルが見つかりません\rファイル名:" + new LocalDirPaths()._gameFilePath + "\\" + _data.FileName + "\\" + _data.ExeName);
+        }
+
+        Process proc = new Process();
+        proc.StartInfo.FileName = new LocalDirPaths()._gameFilePath + "\\" + _data.FileName + "\\" + _data.ExeName;
+        proc.Start();
+    }
+
+    /// <summary>
     /// 渡されたGameData配列からゲームが実際にフォルダにあるかを確認して代入する
     /// </summary>
     public async UniTask _checkStatus(GameData[] _datas)
@@ -122,19 +136,16 @@ public class DirectorySystems
             //未インストールの際
             if (!Directory.Exists(new LocalDirPaths()._gameFilePath + "\\" + g.FileName))
             {
-                Debug.Log("NonInstall");
                 g.Status = "NotInstall";
                 continue;
             }
             else if (!File.Exists(new LocalDirPaths()._jsonFolderPath + "\\" + g.FileName + ".json"))
             {
-                Debug.Log("Local");
                 g.Status = "Local";
                 continue;
             }
             else
             {
-                Debug.Log("Online");
                 g.Status = "Online";
                 continue;
             }

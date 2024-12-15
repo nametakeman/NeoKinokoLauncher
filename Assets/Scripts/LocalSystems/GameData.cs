@@ -9,6 +9,7 @@ public class GameData
 {
     public string FileName;
     public string GameName;
+    //‚±‚±‚ÍŠg’£Žq‚Ü‚Å‚¢‚ê‚½–¼‘O‚ð‘ã“ü‚·‚é
     public string ExeName;
     public string DevName;
     public string DriveId;
