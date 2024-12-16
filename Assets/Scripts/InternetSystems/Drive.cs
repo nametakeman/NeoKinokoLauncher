@@ -11,6 +11,8 @@ using System.IO.Compression;
 using System.Text;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using System;
+using UnityEngine.Windows;
 
 public class Drive
 {
@@ -112,6 +114,7 @@ public class Drive
 
         try
         {
+            Debug.Log("ダウンロードを実行中");
             await DlFile(_data.DriveId, new LocalDirPaths()._gameFilePath);
         }
         catch (System.Exception e)
@@ -122,15 +125,49 @@ public class Drive
 
         try
         {
+            Debug.Log("ファイルを解凍中");
             await ExtractZIP(new LocalDirPaths()._gameFilePath + "\\" + _data.FileName + ".zip");
         }
         catch (System.Exception e)
         {
             Debug.Log("zipファイルの解凍に失敗しました。\rエラー内容：" + e);
+            return false;
         }
 
         Debug.Log("ゲームのダウンロードに成功");
         return true;
+    }
+
+    public async UniTask<string> UploadGame(string _filePath)
+    {
+        //APIが作成されているかを確認する。
+        if (_driveService == null)
+        {
+            throw new Exception("APIが作成されていません");
+        }
+
+        //スレッドの切り替え
+        await UniTask.SwitchToThreadPool();
+        //アップロードするファイルのメタデータを作成
+        var _fileMetaData = new Google.Apis.Drive.v3.Data.File()
+        {
+            Name = Path.GetFileName(_filePath),
+            Parents = new[] { new InternetDatas().GAME_FOLDER_ID }
+        };
+        Debug.Log("アップロードファイルのメタデータを作成完了");
+
+        var _request = _driveService.Files.Create(_fileMetaData, new FileStream(_filePath, FileMode.Open), "application/zip");
+        //アップロードした際にドライブidをリクエストしておく
+        _request.Fields = "id";
+        var uploadProgress = _request.Upload();
+        if(uploadProgress.Status != UploadStatus.Completed)
+        {
+            throw new Exception("アップロードに失敗しました。\rエラー内容：" + uploadProgress.Status);
+        }
+
+        //アップロードしたファイルのIDを取得
+        var file = _request.ResponseBody;
+        return file.Id;
     }
 
 
@@ -200,10 +237,28 @@ public class Drive
     {
         await UniTask.SwitchToThreadPool();
         //日本語ファイルの文字化けを防ぐために文字コードをshift-jisで指定して解凍
-        ZipFile.ExtractToDirectory(_path, Directory.GetParent(_path).FullName, Encoding.GetEncoding("shift_jis"));
+        ZipFile.ExtractToDirectory(_path, System.IO.Directory.GetParent(_path).FullName, Encoding.GetEncoding("shift_jis"));
 
         //zipファイルの削除
         System.IO.File.Delete(_path);
+        await UniTask.SwitchToMainThread();
+    }
+
+    public async UniTask CreateZIP(string _path)
+    {
+        await UniTask.SwitchToThreadPool();
+
+        try
+        {
+            ZipFile.CreateFromDirectory(_path, System.IO.Directory.GetParent(_path).FullName, System.IO.Compression.CompressionLevel.Optimal,false,System.Text.Encoding.GetEncoding("shift_jis"));
+        }
+        catch(Exception e)
+        {
+            await UniTask.SwitchToMainThread();
+            Debug.Log("ファイルの圧縮に失敗しました\rエラー内容："　+ e);
+        }
+
+
         await UniTask.SwitchToMainThread();
     }
 }

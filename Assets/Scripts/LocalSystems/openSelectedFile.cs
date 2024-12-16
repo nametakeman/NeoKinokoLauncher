@@ -41,10 +41,20 @@ public class openSelectedFile
     {
         var extensions = new[]
 {
-            new ExtensionFilter("Any","*"),
+            new ExtensionFilter("Any",""),
         };
 
         var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", extensions, false);
+        if (paths.Length > 0 && paths[0].Length > 0)
+        {
+            return paths[0];
+        }
+        else return "error";
+    }
+
+    public string openFolderDialog()
+    {
+        var paths = StandaloneFileBrowser.OpenFolderPanel("Select Folder", "", false);
         if (paths.Length > 0 && paths[0].Length > 0)
         {
             return paths[0];

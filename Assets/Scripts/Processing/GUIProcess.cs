@@ -70,4 +70,6 @@ public class GUIProcess : MonoBehaviour
             await _startProcess.GetComponent<StartProcess>().StartProMethod();
         _ModeChanges.GetComponent<ModeChanger>().SwitchMode("main");
     }
+
+
 }

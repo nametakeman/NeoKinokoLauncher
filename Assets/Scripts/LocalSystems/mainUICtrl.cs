@@ -9,8 +9,6 @@ public class mainUICtrl : MonoBehaviour
 {
     public GameData[] _AllGameDatas { private set; get; } = null;
 
-    [SerializeField] Text _debugDatailDatasTxt;
-
     [SerializeField] Text _titleTxt;
     [SerializeField] Text _editorTxt;
     [SerializeField] Text _devText;
@@ -27,10 +25,11 @@ public class mainUICtrl : MonoBehaviour
 
     public async UniTask LoadData()
     {
-        if(_AllGameDatas == null)
+        if(_AllGameDatas == null || _AllGameDatas.Length == 0)
         {
             return;
         }
+
 
         if (_AllGameDatas[_nowIndex] == null)
         {
@@ -39,7 +38,6 @@ public class mainUICtrl : MonoBehaviour
 
         string _debugDatailDatas = $"FileName:{_AllGameDatas[_nowIndex].FileName}\r\nGameName:{_AllGameDatas[_nowIndex].GameName}\r\nExeName:{_AllGameDatas[_nowIndex].ExeName}" +
             $"\r\nDevName:{_AllGameDatas[_nowIndex].DevName}";
-        _debugDatailDatasTxt.text = _debugDatailDatas;
 
         _titleTxt.text = _AllGameDatas[_nowIndex].GameName;
         _editorTxt.text = _AllGameDatas[_nowIndex].SoftwareType;

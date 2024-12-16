@@ -34,7 +34,9 @@ public class CommandFieldProcess : MonoBehaviour
         else if (_cmds[0] == "test")
         {
             openSelectedFile openSelectedFile = new openSelectedFile();
-            openSelectedFile.openFileDialogAny();
+            string _path = openSelectedFile.openFolderDialog();
+            Drive drive = new Drive();
+            drive.CreateZIP(_path);
         }
 
 
