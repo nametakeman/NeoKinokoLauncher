@@ -6,7 +6,7 @@ using System.IO;
 using System;
 using System.Text;
 
-public class ManagedVersion : MonoBehaviour
+public class ManagedVersion
 {
 
     /// <summary>
@@ -55,7 +55,7 @@ public class ManagedVersion : MonoBehaviour
     /// Versionクラスを受け取ってフォーマット通りにテキストファイルを作成するクラス
     /// 既存ファイルを上書きするため、渡す配列に既存のバージョンデータを含めておく！
     /// </summary>
-    private void ClassToText(Version[] _versions)
+    public void ClassToText(Version[] _versions)
     {
         string _filepath = new InternetDatas().VERSION_FILE_PATH;
 

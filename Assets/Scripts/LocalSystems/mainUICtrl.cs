@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class mainUICtrl : MonoBehaviour
     [SerializeField] Text _setumeiTxt;
     [SerializeField] GameObject _StartTxt;
     [SerializeField] GameObject _DlTxt;
+    [SerializeField] Image _gameImage;
+    [SerializeField] Sprite _noimage;
 
     public int _nowIndex { get; private set; } = 0;
     
@@ -43,6 +46,28 @@ public class mainUICtrl : MonoBehaviour
         _editorTxt.text = _AllGameDatas[_nowIndex].SoftwareType;
         _devText.text = _AllGameDatas[_nowIndex].DevName;
         _setumeiTxt.text = _AllGameDatas[_nowIndex].Description;
+
+        //画像ファイルパス
+        string _filePath = new LocalDirPaths()._imageFolderPath + @"\" + _AllGameDatas[_nowIndex].FileName + ".png";
+        //画像データをロードする
+        if (File.Exists(_filePath))
+        {
+            //画像データをバイト配列として読み込む
+            byte[] _fileData = File.ReadAllBytes(_filePath);
+            //空のテクスチャを作成する
+            Texture2D _texture = new Texture2D(0, 0);
+            //テクスチャにファイルデータをロードする
+            _texture.LoadImage(_fileData);
+            //スプライトデータに変換する
+            Sprite _sprite = Sprite.Create(_texture, new Rect(0f, 0f, _texture.width, _texture.height),
+                new Vector2(0.5f, 0.5f), 100f);
+            _gameImage.sprite = _sprite;
+        }
+        else
+        {
+            _gameImage.sprite = _noimage;
+        }
+
 
         if (_AllGameDatas[_nowIndex].Status == "NotInstall")
         {

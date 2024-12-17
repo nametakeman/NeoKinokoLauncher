@@ -16,7 +16,7 @@ using UnityEngine.Windows;
 
 public class Drive
 {
-    //ドライブサービスを格納でき、パブリックから取得できるように作成。なければ作る
+    //ドライブサービスを格納でき、パブリックから取得できるように
     public DriveService _driveService { get; private set; }
 
 
@@ -79,7 +79,7 @@ public class Drive
             Debug.Log($"jsonファイルをダウンロード中({_counter}/{_strA.Length})");
             try
             {
-                await DlFile(s, _dirPathJ);
+                await DlFile(s, _dirPathJ, ".json");
 
             }
             catch (System.Exception e)
@@ -92,6 +92,8 @@ public class Drive
 
         return true;
     }
+
+    
 
     /// <summary>
     /// ゲームをダウンロードするための関数
@@ -115,7 +117,7 @@ public class Drive
         try
         {
             Debug.Log("ダウンロードを実行中");
-            await DlFile(_data.DriveId, new LocalDirPaths()._gameFilePath);
+            await DlFile(_data.DriveId, new LocalDirPaths()._gameFilePath,"");
         }
         catch (System.Exception e)
         {
@@ -156,10 +158,14 @@ public class Drive
         };
         Debug.Log("アップロードファイルのメタデータを作成完了");
 
-        var _request = _driveService.Files.Create(_fileMetaData, new FileStream(_filePath, FileMode.Open), "application/zip");
+        FileStream fileStream = new FileStream(_filePath, FileMode.Open);
+
+        var _request = _driveService.Files.Create(_fileMetaData, fileStream, "application/zip");
         //アップロードした際にドライブidをリクエストしておく
         _request.Fields = "id";
         var uploadProgress = _request.Upload();
+        fileStream.Close();
+
         if(uploadProgress.Status != UploadStatus.Completed)
         {
             throw new Exception("アップロードに失敗しました。\rエラー内容：" + uploadProgress.Status);
@@ -170,6 +176,46 @@ public class Drive
         return file.Id;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_filePath"></param>
+    /// <param name="_fileName">こっちはゲームファイルの名前のほう</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async UniTask<string> UploadImg(string _filePath, string _fileName)
+    {
+        //APIが作成されているかを確認
+        if(_driveService == null)
+        {
+            throw new Exception("APIが作成されていません");
+        }
+
+        //スレッドを切り替え
+        await UniTask.SwitchToThreadPool();
+        //アップロードするファイルのメタデータを作成
+        var _fileMetaData = new Google.Apis.Drive.v3.Data.File()
+        {
+            Name = _fileName + ".png",
+            Parents = new[] {new InternetDatas().IMAGE_FOLDER_ID}
+        };
+        Debug.Log("アップロードファイルのメタデータを作成完了");
+
+        FileStream fileStream = new FileStream(_filePath, FileMode.Open);
+
+        var _request = _driveService.Files.Create(_fileMetaData, fileStream, "image/png");
+        _request.Fields = "id";
+        var uploadProgress = _request.Upload();
+        if(uploadProgress.Status != UploadStatus.Completed)
+        {
+            throw new Exception(uploadProgress.Status.ToString());
+        }
+
+        var file = _request.ResponseBody;
+        return file.Id;
+    }
+
+    
 
 
     async UniTask <string[]> DriveList()
@@ -206,7 +252,7 @@ public class Drive
     /// <param name="_id">DriveID</param>
     /// <param name="_path">保存先のパス</param>
     /// <returns></returns>
-    async UniTask DlFile(string _id, string _path)
+    public async UniTask DlFile(string _id, string _path, string _extension)
     {
         //スレッドをメインスレッドから切り替え
         await UniTask.SwitchToThreadPool();
@@ -222,11 +268,12 @@ public class Drive
 
         //本ファイルのダウンロード
         var request = _driveService.Files.Get(_id);
-        var fileStream = new FileStream(Path.Combine(_path, file.Name), FileMode.Create, FileAccess.Write);
+        var fileStream = new FileStream(Path.Combine(_path, (file.Name + _extension)), FileMode.Create, FileAccess.Write);
         request.Download(fileStream);
         fileStream.Close();
         await UniTask.SwitchToMainThread();
     }
+
 
     /// <summary>
     /// 指定されたパスのファイルを解凍する、元のzipファイルは削除される
@@ -237,12 +284,13 @@ public class Drive
     {
         await UniTask.SwitchToThreadPool();
         //日本語ファイルの文字化けを防ぐために文字コードをshift-jisで指定して解凍
-        ZipFile.ExtractToDirectory(_path, System.IO.Directory.GetParent(_path).FullName, Encoding.GetEncoding("shift_jis"));
+        ZipFile.ExtractToDirectory(_path, new LocalDirPaths()._gameFilePath, Encoding.GetEncoding("shift_jis"));
 
         //zipファイルの削除
         System.IO.File.Delete(_path);
         await UniTask.SwitchToMainThread();
     }
+
 
     public async UniTask CreateZIP(string _path)
     {
@@ -250,7 +298,7 @@ public class Drive
 
         try
         {
-            ZipFile.CreateFromDirectory(_path, System.IO.Directory.GetParent(_path).FullName, System.IO.Compression.CompressionLevel.Optimal,false,System.Text.Encoding.GetEncoding("shift_jis"));
+            ZipFile.CreateFromDirectory(_path, _path + ".zip", System.IO.Compression.CompressionLevel.Optimal,false,System.Text.Encoding.GetEncoding("shift_jis"));
         }
         catch(Exception e)
         {

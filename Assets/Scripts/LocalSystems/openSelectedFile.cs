@@ -41,7 +41,7 @@ public class openSelectedFile
     {
         var extensions = new[]
 {
-            new ExtensionFilter("Any",""),
+            new ExtensionFilter("Any","*"),
         };
 
         var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", extensions, false);

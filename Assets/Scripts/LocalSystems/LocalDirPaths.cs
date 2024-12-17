@@ -9,6 +9,10 @@ public class LocalDirPaths
 {
     //ゲームが保存されるディレクトリ
     public string _gameFilePath { get; private set; } = "Downloaded";
+
     //jsonFileが保存されるディレクトリ
     public string _jsonFolderPath { get; private set; } = "JsonData";
+
+    //イメージ写真が保存されるディレクトリ
+    public string _imageFolderPath { get; private set; } = "images";
 }

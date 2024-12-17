@@ -7,12 +7,13 @@ public class CommandFieldProcess : MonoBehaviour
 {
     [SerializeField] InputField _commandInputField;
     [SerializeField] GameObject _modeChange;
+    [SerializeField] GameObject _guiProcess;
 
     /// <summary>
     /// inputFieldに入力されたコマンドを実行するメソッド
     /// inputFieldのOnEndEditにアタッチされるのでエンターを押した時点で呼び出される。
     /// </summary>
-    public void EnteredTx()
+    public async void EnteredTx()
     {
         //このメソッドが呼び出された時点の入力されている文字列を取得
         string _sendCommand = _commandInputField.text;
@@ -33,10 +34,7 @@ public class CommandFieldProcess : MonoBehaviour
         }
         else if (_cmds[0] == "test")
         {
-            openSelectedFile openSelectedFile = new openSelectedFile();
-            string _path = openSelectedFile.openFolderDialog();
-            Drive drive = new Drive();
-            drive.CreateZIP(_path);
+
         }
 
 

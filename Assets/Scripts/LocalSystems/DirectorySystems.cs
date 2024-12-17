@@ -15,6 +15,8 @@ public class DirectorySystems
     {
         string _gameFilePath = new LocalDirPaths()._gameFilePath;
         string _jsonFolderPath = new LocalDirPaths()._jsonFolderPath;
+        string _ImageFolderPath = new LocalDirPaths()._imageFolderPath;
+        string _VersionFilePath = new InternetDatas().VERSION_FILE_PATH;
 
         if (!Directory.Exists(_gameFilePath))
         {
@@ -23,6 +25,20 @@ public class DirectorySystems
         if(!Directory.Exists(_jsonFolderPath)) 
         {
             Directory.CreateDirectory(_jsonFolderPath);
+        }
+        if (!File.Exists(_VersionFilePath))
+        {
+            if (!Directory.Exists("version"))
+            {
+                Directory.CreateDirectory("version");
+            }
+
+            FileStream fs = File.Create(_VersionFilePath);
+            fs.Close();
+        }
+        if (!Directory.Exists(_ImageFolderPath))
+        {
+            Directory.CreateDirectory(_ImageFolderPath);
         }
     }
     
