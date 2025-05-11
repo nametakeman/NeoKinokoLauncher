@@ -1,0 +1,11 @@
+{
+  "FileName": "NonStopTuna2",
+  "GameName": "NonStopTuna2",
+  "ExeName": "NonStopTuna2.exe",
+  "DevName": "森蒼太朗",
+  "DriveId": "",
+  "ImageId": "",
+  "SoftwareType": "Unity",
+  "Description": "ランダムに生成された障害物を回避し、ゴールを目指すゲームです。操作方法はNonStopTuna_Readme.txtを参照してください",
+  "Version": 0
+}

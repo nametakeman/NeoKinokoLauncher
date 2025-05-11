@@ -282,9 +282,12 @@ public class Drive
     /// <returns></returns>
     async UniTask ExtractZIP(string _path)
     {
+        string _zipFileName = Path.GetFileNameWithoutExtension(_path);
+        string extractDir = Path.Combine(new LocalDirPaths()._gameFilePath, _zipFileName);
+
         await UniTask.SwitchToThreadPool();
         //日本語ファイルの文字化けを防ぐために文字コードをshift-jisで指定して解凍
-        ZipFile.ExtractToDirectory(_path, new LocalDirPaths()._gameFilePath, Encoding.GetEncoding("shift_jis"));
+        ZipFile.ExtractToDirectory(_path, extractDir, Encoding.GetEncoding("shift_jis"));
 
         //zipファイルの削除
         System.IO.File.Delete(_path);
